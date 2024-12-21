@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,14 +20,26 @@ public class Card : MonoBehaviour
     public void Setup(int cardValue, Action<Card> callbackOnCardFlipped)
     {
         CardValue = cardValue;
-        valueText.text = cardValue.ToString();
+        valueText.text = "Open";
         onCardFlipped = callbackOnCardFlipped;
         cardButton.onClick.AddListener(OnCardButtonClicked);
+    }
+
+    public void SetFlipped()
+    {
+        valueText.text = CardValue.ToString();
+        cardButton.interactable = false;
     }
 
     public void SetMatched()
     {
         cardButton.interactable = false;
+    }
+
+    public void ResetCard()
+    {
+        valueText.text = "Open";
+        cardButton.interactable = true;
     }
 
     private void OnCardButtonClicked()

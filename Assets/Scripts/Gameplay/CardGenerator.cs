@@ -14,10 +14,9 @@ public class CardGenerator : MonoBehaviour
     [SerializeField] int noOfRows = 2;
     [SerializeField] int noOfColumns = 2;
 
-    private List<Card> generatedCards = new();
-    private Action<Card> onCardFlipped;
+    [HideInInspector] public int TotalValues = 0;
 
-    public int TotalValues = 0;
+    private List<Card> generatedCards = new();
 
     public void GenerateCards(Action<Card> onCardFlipped)
     {

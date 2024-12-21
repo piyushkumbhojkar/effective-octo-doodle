@@ -7,22 +7,19 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private CardGenerator cardGenerator;
 
-    private Card firstCard = null;
-    private Card secondCard = null;
-
     private int currentMatches = 0;
     private int totalMatches = 0;
+
+    private Card firstFlippedCard;
+    private Card secondFlippedCard;
+    private bool matchInProgress = false;
+
+    private Queue<Card> flippedCards = new Queue<Card>();
 
     // Start is called before the first frame update
     void Start()
     {
         StartGame();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void StartGame()
@@ -37,39 +34,58 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"Flipped Card value: {flippedCard.CardValue}");
 
-        if(firstCard == null)
+        if (flippedCards.Contains(flippedCard))
+            return;
+
+        flippedCards.Enqueue(flippedCard);
+        flippedCard.SetFlipped();
+
+        if (flippedCards.Count >= 2 && !matchInProgress)
         {
-            firstCard = flippedCard;
+            StartCoroutine(CheckForCardMatch());
         }
-        else
+    }
+
+    IEnumerator CheckForCardMatch()
+    {
+        matchInProgress = true;
+        
+        yield return new WaitForSeconds(0.5f);
+
+        if (flippedCards.Count >= 2)
         {
-            secondCard = flippedCard;   
+            firstFlippedCard = flippedCards.Dequeue();
+            secondFlippedCard = flippedCards.Dequeue();
 
-            if(firstCard.CardValue == secondCard.CardValue)
+            if(firstFlippedCard.CardValue == secondFlippedCard.CardValue)
             {
-                Debug.Log("Found a match!");
+                Debug.Log("It's a match!");
 
-                firstCard.SetMatched();
-                secondCard.SetMatched();  
+                firstFlippedCard.SetMatched();
+                secondFlippedCard.SetMatched();
                 currentMatches++;
 
                 if(currentMatches >= totalMatches)
                 {
-                    Debug.Log("Wow. You finished the game.");
+                    Debug.Log("Game Over. You matched all the cards!");
                 }
             }
             else
             {
-                Debug.Log("Try again!");
-            }
+                Debug.Log("Wrong match. Try again.");
 
-            ResetCards();
+                firstFlippedCard.ResetCard();
+                secondFlippedCard.ResetCard();
+            }
         }
+
+        ResetCards();
+        matchInProgress = false;
     }
 
     private void ResetCards()
     {
-        firstCard = null;
-        secondCard = null;
+        firstFlippedCard = null;
+        secondFlippedCard = null;
     }
 }

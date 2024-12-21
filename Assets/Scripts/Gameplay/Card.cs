@@ -24,8 +24,13 @@ public class Card : MonoBehaviour
         cardButton.onClick.AddListener(OnCardButtonClicked);
     }
 
+    public void SetMatched()
+    {
+        cardButton.interactable = false;
+    }
+
     private void OnCardButtonClicked()
     {
         onCardFlipped?.Invoke(this);
-    }
+    }   
 }

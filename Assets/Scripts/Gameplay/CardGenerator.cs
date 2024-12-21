@@ -14,8 +14,10 @@ public class CardGenerator : MonoBehaviour
     [SerializeField] int noOfRows = 2;
     [SerializeField] int noOfColumns = 2;
 
-    private List<Card> generatedCards = new List<Card>();
+    private List<Card> generatedCards = new();
     private Action<Card> onCardFlipped;
+
+    public int TotalValues = 0;
 
     public void GenerateCards(Action<Card> onCardFlipped)
     {
@@ -27,8 +29,9 @@ public class CardGenerator : MonoBehaviour
     {
         int totalCards = noOfRows * noOfColumns;
         int totalValues = totalCards / 2;
+        TotalValues = totalValues;
 
-        List<int> cardValues = new List<int>();
+        List<int> cardValues = new();
 
         for (int i = 0; i < totalValues; i++)
         {
@@ -50,7 +53,7 @@ public class CardGenerator : MonoBehaviour
         {
             for (int column = 0; column < noOfColumns; column++)
             {
-                Card newCard = Instantiate<Card>(card, gridLayout.transform);
+                Card newCard = Instantiate(card, gridLayout.transform);
                 newCard.name = $"Card_{row}_{column}";
                 newCard.Setup(cardValues[valueIndex++], onCardFlipped);
 

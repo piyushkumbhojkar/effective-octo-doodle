@@ -17,9 +17,11 @@ public class CardGenerator : MonoBehaviour
     [HideInInspector] public int TotalValues = 0;
 
     private List<Card> generatedCards = new();
+    private FruitsData fruitsData;
 
-    public void GenerateCards(Action<Card> onCardFlipped)
+    public void GenerateCards(Action<Card> onCardFlipped, FruitsData data)
     {
+        fruitsData = data;
         List<int> cardValues = GenerdateCardValues();
         SetupCards(cardValues, onCardFlipped);
     }
@@ -43,6 +45,11 @@ public class CardGenerator : MonoBehaviour
         return cardValues;
     }
 
+    private Fruit GetFruitData(int index)
+    {
+        return fruitsData.fruits[index];
+    }
+
     private void SetupCards(List<int> cardValues, Action<Card> onCardFlipped)
     {
         int valueIndex = 0;
@@ -54,7 +61,9 @@ public class CardGenerator : MonoBehaviour
             {
                 Card newCard = Instantiate(card, gridLayout.transform);
                 newCard.name = $"Card_{row}_{column}";
-                newCard.Setup(cardValues[valueIndex++], onCardFlipped);
+
+                Fruit data = GetFruitData(cardValues[valueIndex++]);
+                newCard.Setup(data, onCardFlipped);
 
                 generatedCards.Add(newCard);
             }

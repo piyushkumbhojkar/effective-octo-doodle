@@ -15,11 +15,12 @@ public class Card : MonoBehaviour
     // Front Side
     [SerializeField] private GameObject frontSide;
     [SerializeField] private TMP_Text valueText;
+    [SerializeField] private Image icon;
 
     //Back Side
     [SerializeField] private GameObject backSide;    
 
-    [HideInInspector] public int CardValue;
+    [HideInInspector] public Fruit CardValue;
 
     private Action<Card> onCardFlipped;
     private CardState currentState;
@@ -27,17 +28,17 @@ public class Card : MonoBehaviour
     private float flipAnimDuration = 0.1f;
     private Vector3 flipVector = new Vector3(0, 90f, 0);
 
-    public void Setup(int cardValue, Action<Card> callbackOnCardFlipped)
+    public void Setup(Fruit fruitData, Action<Card> callbackOnCardFlipped)
     {
-        CardValue = cardValue;
-        onCardFlipped = callbackOnCardFlipped;
+        CardValue = fruitData;
+        icon.sprite = fruitData.FruitSprite;
 
+        onCardFlipped = callbackOnCardFlipped;
         cardButton.onClick.AddListener(OnCardButtonClicked);
     }
 
     public void Flip()
     {
-        valueText.text = CardValue.ToString();
         currentState = CardState.Opened;
         FlipCard();
     }

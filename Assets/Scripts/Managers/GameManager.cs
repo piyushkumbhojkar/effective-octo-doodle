@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private CardGenerator cardGenerator;
+    [SerializeField] private FruitsData fruitsData;
 
     [Header("Timer Setup")]
     [SerializeField] private float matchDuration = 0.25f;
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {       
-        cardGenerator.GenerateCards(OnCardFlipped);
+        cardGenerator.GenerateCards(OnCardFlipped, fruitsData);
 
         currentMatches = 0;
         totalMatches = cardGenerator.TotalValues;
@@ -60,7 +61,7 @@ public class GameManager : MonoBehaviour
             firstSelectedCard = flippedCards.Dequeue();
             secondSelectedCard = flippedCards.Dequeue();
 
-            if(firstSelectedCard.CardValue == secondSelectedCard.CardValue)
+            if(firstSelectedCard.CardValue.FruitType == secondSelectedCard.CardValue.FruitType)
             {
                 Debug.Log("It's a match!");
 

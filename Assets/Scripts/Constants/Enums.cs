@@ -5,3 +5,27 @@ public enum CardState
     Closed,
     Matched
 }
+
+public enum FruitType
+{
+    Apple,
+    Avocado,
+    Banana,
+    Berry,
+    Cherry,
+    Coconut,
+    Corn,
+    DragonFruit,
+    Grape,
+    Guava,
+    Lemon,
+    Mango,
+    Mangosteen,
+    Melon,
+    Orange,
+    Peach,
+    Pear,
+    Pineapple,
+    Strawberry,
+    Watermelon
+}

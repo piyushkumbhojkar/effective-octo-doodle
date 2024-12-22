@@ -8,8 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CardGenerator cardGenerator;
 
     [Header("Timer Setup")]
-    [SerializeField] private float matchDurationn = 0.5f;
-    [SerializeField] private float flipDuration;
+    [SerializeField] private float matchDuration = 0.25f;
 
     private int currentMatches = 0;
     private int totalMatches = 0;
@@ -54,7 +53,7 @@ public class GameManager : MonoBehaviour
     {
         matchInProgress = true;
         
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(matchDuration);
 
         if (flippedCards.Count >= 2)
         {

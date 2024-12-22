@@ -8,41 +8,80 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    [Header("Card Setup")]
+    [Header("Card Setup")]    
     [SerializeField] private Button cardButton;
+    [SerializeField] private Transform flipTransform;
+
+    // Front Side
+    [SerializeField] private GameObject frontSide;
     [SerializeField] private TMP_Text valueText;
 
+    //Back Side
+    [SerializeField] private GameObject backSide;    
+
     [HideInInspector] public int CardValue;
-    [HideInInspector] public bool IsMatched;
 
     private Action<Card> onCardFlipped;
+    private CardState currentState;
+
+    private float flipAnimDuration = 0.1f;
+    private Vector3 flipVector = new Vector3(0, 90f, 0);
 
     public void Setup(int cardValue, Action<Card> callbackOnCardFlipped)
     {
         CardValue = cardValue;
-        valueText.text = "Open";
         onCardFlipped = callbackOnCardFlipped;
+
         cardButton.onClick.AddListener(OnCardButtonClicked);
     }
 
-    public void SetFlipped()
+    public void Flip()
     {
         valueText.text = CardValue.ToString();
-        cardButton.interactable = false;
+        currentState = CardState.Opened;
+        FlipCard();
+    }
+
+    public void FlipBack()
+    {
+        currentState = CardState.Closed;
+        FlipCard();
     }
 
     public void SetMatched()
     {
-        cardButton.interactable = false;
+        currentState = CardState.Matched;
+        flipTransform.gameObject.SetActive(false);
     }
 
-    public void ResetCard()
+    private void FlipCard()
     {
-        valueText.text = "Open";
-        cardButton.interactable = true;
+        GameObject objectToActivate;
+        GameObject objectToDeactivate;
+
+        if(currentState == CardState.Opened)
+        {
+            objectToActivate = frontSide;
+            objectToDeactivate = backSide;
+        }
+        else
+        {
+            objectToActivate = backSide;
+            objectToDeactivate = frontSide;
+        }
+
+        // Flip Animation Logic
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(flipTransform.DORotate(flipVector, flipAnimDuration)).OnComplete(() =>
+        {
+            objectToActivate.SetActive(true);
+            objectToDeactivate.SetActive(false);
+        });
+        sequence.Append(flipTransform.DORotate(Vector3.zero, flipAnimDuration));
+        sequence.Play();
     }
 
-    private void OnCardButtonClicked()
+    public void OnCardButtonClicked()
     {
         onCardFlipped?.Invoke(this);
     }   

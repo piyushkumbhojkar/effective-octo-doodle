@@ -7,11 +7,15 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private CardGenerator cardGenerator;
 
+    [Header("Timer Setup")]
+    [SerializeField] private float matchDurationn = 0.5f;
+    [SerializeField] private float flipDuration;
+
     private int currentMatches = 0;
     private int totalMatches = 0;
 
-    private Card firstFlippedCard;
-    private Card secondFlippedCard;
+    private Card firstSelectedCard;
+    private Card secondSelectedCard;
     private bool matchInProgress = false;
 
     private Queue<Card> flippedCards = new Queue<Card>();
@@ -38,7 +42,7 @@ public class GameManager : MonoBehaviour
             return;
 
         flippedCards.Enqueue(flippedCard);
-        flippedCard.SetFlipped();
+        flippedCard.Flip();
 
         if (flippedCards.Count >= 2 && !matchInProgress)
         {
@@ -54,15 +58,15 @@ public class GameManager : MonoBehaviour
 
         if (flippedCards.Count >= 2)
         {
-            firstFlippedCard = flippedCards.Dequeue();
-            secondFlippedCard = flippedCards.Dequeue();
+            firstSelectedCard = flippedCards.Dequeue();
+            secondSelectedCard = flippedCards.Dequeue();
 
-            if(firstFlippedCard.CardValue == secondFlippedCard.CardValue)
+            if(firstSelectedCard.CardValue == secondSelectedCard.CardValue)
             {
                 Debug.Log("It's a match!");
 
-                firstFlippedCard.SetMatched();
-                secondFlippedCard.SetMatched();
+                firstSelectedCard.SetMatched();
+                secondSelectedCard.SetMatched();
                 currentMatches++;
 
                 if(currentMatches >= totalMatches)
@@ -74,8 +78,8 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("Wrong match. Try again.");
 
-                firstFlippedCard.ResetCard();
-                secondFlippedCard.ResetCard();
+                firstSelectedCard.FlipBack();
+                secondSelectedCard.FlipBack();
             }
         }
 
@@ -85,7 +89,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetCards()
     {
-        firstFlippedCard = null;
-        secondFlippedCard = null;
+        firstSelectedCard = null;
+        secondSelectedCard = null;
     }
 }

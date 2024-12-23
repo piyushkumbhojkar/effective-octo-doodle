@@ -11,7 +11,14 @@ public class GameManager : MonoBehaviour
     [Header("Timer Setup")]
     [SerializeField] private float matchDuration = 0.25f;
 
-    private int currentMatches = 0;
+    [Header("Scoring Setup")]
+    [SerializeField] private int baseScore = 10;
+    [SerializeField] private int bonusMultiplier = 5;
+
+    private int currentScore = 0;
+    private int bonusStreak = 0;
+
+    private int currentMatchCount = 0;
     private int totalMatches = 0;
 
     private Card firstSelectedCard;
@@ -35,8 +42,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [HideInInspector] public int CurrentScore;
     public Action OnGameOver;
+    public Action<int> OnScoreUpdate;
+    public Action<int> OnMatchCountUpdate;
+
+    public int CurrentScore
+    {
+        get { return currentScore; }
+    }
 
     void Awake()
     {
@@ -47,7 +60,7 @@ public class GameManager : MonoBehaviour
     {       
         cardGenerator.GenerateCards(OnCardFlipped, fruitsData);
 
-        currentMatches = 0;
+        currentMatchCount = 0;
         totalMatches = cardGenerator.TotalValues;
     }
 
@@ -86,9 +99,13 @@ public class GameManager : MonoBehaviour
 
                 firstSelectedCard.SetMatched();
                 secondSelectedCard.SetMatched();
-                currentMatches++;
+                
+                currentMatchCount++;
+                OnMatchCountUpdate?.Invoke(currentMatchCount);
 
-                if(currentMatches >= totalMatches)
+                UpdateScore(true);
+
+                if(currentMatchCount >= totalMatches)
                 {
                     Debug.Log("Game Over. You matched all the cards!");
 
@@ -104,6 +121,8 @@ public class GameManager : MonoBehaviour
 
                 firstSelectedCard.FlipBack();
                 secondSelectedCard.FlipBack();
+
+                UpdateScore(false);
             }
         }
 
@@ -115,5 +134,23 @@ public class GameManager : MonoBehaviour
     {
         firstSelectedCard = null;
         secondSelectedCard = null;
+    }
+
+    private void UpdateScore(bool isMatched)
+    {
+        if (isMatched)
+        {
+            int bonusScore = bonusStreak * bonusMultiplier;
+            int score = baseScore + bonusScore;
+
+            currentScore += score;
+            OnScoreUpdate?.Invoke(currentScore);
+
+            bonusStreak++;
+        }
+        else
+        {
+            bonusStreak = 0;
+        }
     }
 }

@@ -305,6 +305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 064b44cc4f98f4442b3167402be1acc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreText: {fileID: 1236881606}
+  matcheCountText: {fileID: 1706579933}
 --- !u!1 &411848274
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,7 +474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &536663785
 RectTransform:
   m_ObjectHideFlags: 0
@@ -844,7 +846,8 @@ MonoBehaviour:
   cardGenerator: {fileID: 1348802517}
   fruitsData: {fileID: 11400000, guid: 97a87b47643cfd841ae1460a379c16aa, type: 2}
   matchDuration: 0.5
-  CurrentScore: 0
+  baseScore: 10
+  bonusMultiplier: 5
 --- !u!4 &976573817
 Transform:
   m_ObjectHideFlags: 0
@@ -1892,7 +1895,7 @@ GameObject:
   - component: {fileID: 1706579934}
   - component: {fileID: 1706579933}
   m_Layer: 5
-  m_Name: Matches
+  m_Name: MatcheCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1915,8 +1918,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125, y: -40}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 175, y: -40}
+  m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1706579933
 MonoBehaviour:

@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = GameObject.FindObjectOfType<GameManager>();
+                instance = FindObjectOfType<GameManager>();
             }
 
             return instance;
@@ -85,6 +85,8 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("It's a match!");
 
+                AudioManager.Instance.PlayAudio(AudioType.CorrectMatch);
+
                 firstSelectedCard.SetMatched();
                 secondSelectedCard.SetMatched();
                 currentMatches++;
@@ -92,11 +94,15 @@ public class GameManager : MonoBehaviour
                 if(currentMatches >= totalMatches)
                 {
                     Debug.Log("Game Over. You matched all the cards!");
+
+                    AudioManager.Instance.PlayAudio(AudioType.GameComplete);
                 }
             }
             else
             {
                 Debug.Log("Wrong match. Try again.");
+
+                AudioManager.Instance.PlayAudio(AudioType.WrongMatch);
 
                 firstSelectedCard.FlipBack();
                 secondSelectedCard.FlipBack();

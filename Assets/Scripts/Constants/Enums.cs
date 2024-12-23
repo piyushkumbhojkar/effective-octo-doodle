@@ -36,3 +36,11 @@ public enum ScreenType
     GameplayScreen,
     ResultScreen
 }
+
+public enum AudioType
+{
+    Flip,
+    CorrectMatch,
+    WrongMatch,
+    GameComplete
+}

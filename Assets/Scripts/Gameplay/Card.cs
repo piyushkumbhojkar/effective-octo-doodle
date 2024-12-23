@@ -71,6 +71,8 @@ public class Card : MonoBehaviour
             objectToDeactivate = frontSide;
         }
 
+        AudioManager.Instance.PlayAudio(AudioType.Flip);
+
         // Flip Animation Logic
         Sequence sequence = DOTween.Sequence();
         sequence.Append(flipTransform.DORotate(flipVector, flipAnimDuration)).OnComplete(() =>

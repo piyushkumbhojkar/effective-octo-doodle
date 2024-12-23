@@ -29,3 +29,10 @@ public enum FruitType
     Strawberry,
     Watermelon
 }
+
+public enum ScreenType
+{
+    MenuScreen,
+    GameplayScreen,
+    ResultScreen
+}

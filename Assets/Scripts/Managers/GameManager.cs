@@ -20,6 +20,26 @@ public class GameManager : MonoBehaviour
 
     private Queue<Card> flippedCards = new Queue<Card>();
 
+    private static GameManager instance;
+
+    public static GameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = GameObject.FindObjectOfType<GameManager>();
+            }
+
+            return instance;
+        }
+    }
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {

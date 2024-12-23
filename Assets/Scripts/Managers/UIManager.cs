@@ -8,6 +8,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameplayScreen gameplayScreen;
     [SerializeField] private ResultScreen resultScreen;
 
+    private BaseScreen currentScreen = null;
+    private BaseScreen previousScreen = null;
+
     private static UIManager instance;
 
     public static UIManager Instance
@@ -23,25 +26,42 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void Start()
+    {
+        ShowScreen(ScreenType.MenuScreen);
+    }
+
     public void ShowScreen(ScreenType screenType)
     {
-        switch(screenType)
+        previousScreen = currentScreen;
+
+        switch (screenType)
         {
             case ScreenType.MenuScreen:
                 {
-                    menuScreen.ShowScreen();
+                    currentScreen = menuScreen;
                     break;
                 }
             case ScreenType.GameplayScreen:
                 {
-                    gameplayScreen.ShowScreen();
+                    currentScreen = gameplayScreen;
                     break;
                 }
             case ScreenType.ResultScreen:
                 {
-                    resultScreen.ShowScreen();
+                    currentScreen = resultScreen;
                     break;
                 }
+        }
+
+        if (currentScreen != null)
+        {
+            if (previousScreen != null)
+            {
+                previousScreen.HideSceen();
+            }
+
+            currentScreen.ShowScreen();
         }
     }
 }

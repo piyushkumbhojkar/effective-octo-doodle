@@ -35,6 +35,9 @@ public class Card : MonoBehaviour
 
         onCardFlipped = callbackOnCardFlipped;
         cardButton.onClick.AddListener(OnCardButtonClicked);
+
+        backSide.SetActive(true);
+        flipTransform.gameObject.SetActive(true);
     }
 
     public void Flip()

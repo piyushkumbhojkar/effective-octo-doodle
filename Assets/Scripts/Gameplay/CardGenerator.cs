@@ -19,8 +19,18 @@ public class CardGenerator : MonoBehaviour
     private List<Card> generatedCards = new();
     private FruitsData fruitsData;
 
+    private Pool<Card> cardPool = new();
+
+    private void Awake()
+    {
+        cardPool.Initialize(card);
+    }
+
     public void GenerateCards(Action<Card> onCardFlipped, FruitsData data)
     {
+        cardPool.ResetPool();
+        generatedCards.Clear();
+
         fruitsData = data;
         List<int> cardValues = GenerdateCardValues();
         SetupCards(cardValues, onCardFlipped);
@@ -59,7 +69,8 @@ public class CardGenerator : MonoBehaviour
         {
             for (int column = 0; column < noOfColumns; column++)
             {
-                Card newCard = Instantiate(card, gridLayout.transform);
+                Card newCard = cardPool.GetObject();
+                newCard.transform.SetParent(cardsParent);
                 newCard.name = $"Card_{row}_{column}";
 
                 Fruit data = GetFruitData(cardValues[valueIndex++]);

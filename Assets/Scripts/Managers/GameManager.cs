@@ -35,18 +35,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [HideInInspector] public int CurrentScore;
+    public Action OnGameOver;
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartGame();
-    }
-
-    private void StartGame()
+    public void StartGame()
     {       
         cardGenerator.GenerateCards(OnCardFlipped, fruitsData);
 
@@ -96,6 +93,7 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Game Over. You matched all the cards!");
 
                     AudioManager.Instance.PlayAudio(AudioType.GameComplete);
+                    OnGameOver?.Invoke();
                 }
             }
             else

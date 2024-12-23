@@ -44,6 +44,14 @@ public class AudioManager : MonoBehaviour
     public void PlayAudio(AudioType audioType)
     {
         AudioClip audioClip = GetAudioClip(audioType);
-        audioSource.PlayOneShot(audioClip);
+
+        if (audioClip != null)
+        {
+            audioSource.PlayOneShot(audioClip);
+        }
+        else
+        {
+            Debug.LogError($"No audio file found of type {audioType}");
+        }
     }
 }

@@ -14,10 +14,11 @@ public class GameplayScreen : BaseScreen
 
         ResetScreen();
 
-        GameManager.Instance.StartGame();
         GameManager.Instance.OnGameOver += OnGameOver;
         GameManager.Instance.OnScoreUpdate += OnScoreUpdate;
         GameManager.Instance.OnMatchCountUpdate += OnMatchCountUpdate;
+
+        GameManager.Instance.StartGame();
     }
 
     private void ResetScreen()

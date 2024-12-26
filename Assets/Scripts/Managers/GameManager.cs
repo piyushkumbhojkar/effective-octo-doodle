@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private CardGenerator cardGenerator;
     [SerializeField] private FruitsData fruitsData;
+    [SerializeField] private GameData gameData;
 
     [Header("Timer Setup")]
     [SerializeField] private float matchDuration = 0.25f;
@@ -42,6 +43,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public GameData GameData
+    {
+        get { return gameData; }
+    }
+
     public Action OnGameOver;
     public Action<int> OnScoreUpdate;
     public Action<int> OnMatchCountUpdate;
@@ -58,11 +64,31 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {       
-        cardGenerator.GenerateCards(OnCardFlipped, fruitsData);
+        if (gameData.IsDataSaved)
+        {
+            ContinueGame();
+        }
+        else
+        {
+            cardGenerator.GenerateCards(OnCardFlipped, fruitsData);
 
-        currentMatchCount = 0;
-        totalMatches = cardGenerator.TotalValues;
+            currentMatchCount = 0;
+            totalMatches = cardGenerator.TotalValues;
+        }
     }
+
+    public void ContinueGame()
+    {
+        currentScore = gameData.CurrentScore;
+        currentMatchCount = gameData.CurrentMatchCount;
+
+        cardGenerator.GenerateCardsFromPrefs(OnCardFlipped, fruitsData, gameData.CurrentCards);
+        totalMatches = cardGenerator.TotalValues;
+
+        OnScoreUpdate?.Invoke(currentScore);
+        OnMatchCountUpdate?.Invoke(currentMatchCount);
+    }
+
 
     private void OnCardFlipped(Card flippedCard)
     {
@@ -108,9 +134,14 @@ public class GameManager : MonoBehaviour
                 if(currentMatchCount >= totalMatches)
                 {
                     Debug.Log("Game Over. You matched all the cards!");
+                    gameData.ResetData();
 
                     AudioManager.Instance.PlayAudio(AudioType.GameComplete);
                     OnGameOver?.Invoke();
+                }
+                else
+                {
+                    SaveGameData();
                 }
             }
             else
@@ -152,5 +183,10 @@ public class GameManager : MonoBehaviour
         {
             bonusStreak = 0;
         }
+    }
+
+    private void SaveGameData()
+    {
+        gameData.SaveData(currentScore, currentMatchCount, cardGenerator.GeneratedCards);
     }
 }

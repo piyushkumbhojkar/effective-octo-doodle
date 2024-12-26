@@ -21,6 +21,11 @@ public class Card : MonoBehaviour
     [SerializeField] private GameObject backSide;    
 
     [HideInInspector] public Fruit CardValue;
+    [HideInInspector] 
+    public bool IsMatched
+    {
+        get { return currentState == CardState.Matched; }
+    }
 
     private Action<Card> onCardFlipped;
     private CardState currentState;
@@ -28,7 +33,7 @@ public class Card : MonoBehaviour
     private float flipAnimDuration = 0.1f;
     private Vector3 flipVector = new Vector3(0, 90f, 0);
 
-    public void Setup(Fruit fruitData, Action<Card> callbackOnCardFlipped)
+    public void Setup(Fruit fruitData, Action<Card> callbackOnCardFlipped, bool isMatched = false)
     {
         CardValue = fruitData;
         icon.sprite = fruitData.FruitSprite;
@@ -38,6 +43,11 @@ public class Card : MonoBehaviour
 
         backSide.SetActive(true);
         flipTransform.gameObject.SetActive(true);
+
+        if(isMatched)
+        {
+            SetMatched();
+        }
     }
 
     public void Flip()

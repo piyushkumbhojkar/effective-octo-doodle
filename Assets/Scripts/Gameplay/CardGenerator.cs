@@ -15,6 +15,11 @@ public class CardGenerator : MonoBehaviour
     [SerializeField] int noOfColumns = 2;
 
     [HideInInspector] public int TotalValues = 0;
+    [HideInInspector]
+    public List<Card> GeneratedCards
+    {
+        get { return generatedCards; }
+    }
 
     private List<Card> generatedCards = new();
     private FruitsData fruitsData;
@@ -26,10 +31,19 @@ public class CardGenerator : MonoBehaviour
         cardPool.Initialize(card);
     }
 
+    private void UpdateValues()
+    {
+        int totalCards = noOfRows * noOfColumns;
+        int totalValues = totalCards / 2;
+        TotalValues = totalValues;
+    }
+
     public void GenerateCards(Action<Card> onCardFlipped, FruitsData data)
     {
         cardPool.ResetPool();
         generatedCards.Clear();
+
+        UpdateValues();
 
         fruitsData = data;
         List<int> cardValues = GenerdateCardValues();
@@ -38,13 +52,9 @@ public class CardGenerator : MonoBehaviour
 
     private List<int> GenerdateCardValues()
     {
-        int totalCards = noOfRows * noOfColumns;
-        int totalValues = totalCards / 2;
-        TotalValues = totalValues;
-
         List<int> cardValues = new();
 
-        for (int i = 0; i < totalValues; i++)
+        for (int i = 0; i < TotalValues; i++)
         {
             cardValues.Add(i);
             cardValues.Add(i);
@@ -80,4 +90,46 @@ public class CardGenerator : MonoBehaviour
             }
         }
     }
+
+    #region Load Game Data
+
+    public void GenerateCardsFromPrefs(Action<Card> onCardFlipped, FruitsData data, List<PrefCard> prefCards)
+    {
+        cardPool.ResetPool();
+        generatedCards.Clear();
+
+        UpdateValues();
+
+        fruitsData = data;
+        SetupCards(prefCards, onCardFlipped);
+    }
+
+    private Fruit GetFruitData(FruitType type)
+    {
+        return fruitsData.fruits.Find(fruit => fruit.FruitType == type);
+    }
+
+    private void SetupCards(List<PrefCard> cardValues, Action<Card> onCardFlipped)
+    {
+        int valueIndex = 0;
+        gridLayout.constraintCount = noOfRows;
+
+        for (int row = 0; row < noOfRows; row++)
+        {
+            for (int column = 0; column < noOfColumns; column++)
+            {
+                Card newCard = cardPool.GetObject();
+                newCard.transform.SetParent(cardsParent);
+                newCard.name = $"Card_{row}_{column}";
+
+                PrefCard prefData = cardValues[valueIndex++];
+                Fruit data = GetFruitData(prefData.CardType);
+                newCard.Setup(data, onCardFlipped, prefData.IsMatched);
+
+                generatedCards.Add(newCard);
+            }
+        }
+    }
+
+    #endregion
 }
